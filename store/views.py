@@ -11,13 +11,19 @@ from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAdminUser
 
 # Create your views here.
-def home():
-  return render("check")
+# def home(request):
+# 	products = Product.objects.all()
+# 	return render(request, 'home.html', {'products':products})
 
 
 class GroupViewSet(ModelViewSet):
   queryset = Group.objects.all()
   serializer_class = GroupSerializer
+  permission_classes = [AllowAny]
+  
+class CustomerViewSet(ModelViewSet):
+  queryset = Customer.objects.all()
+  serializer_class = CustomerSerializer
   permission_classes = [AllowAny]
   
 class CategoryViewSet(ModelViewSet):
