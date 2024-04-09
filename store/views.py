@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from .models import Category, Customer, Order, Product, User
@@ -9,6 +9,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAdminUser
+from django.db.models import Q
+from django.contrib import messages
+from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def home(request):
@@ -18,6 +22,21 @@ def home(request):
 def product(request,pk):
 	product = Product.objects.get(id=pk)
 	return render(request, 'product.html', {'product':product})
+
+def search(request):
+	# Determine if they filled out the form
+	if request.method == "POST":
+		searched = request.POST['searched']
+		# Query The Products DB Model
+		searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+		# Test for null
+		if not searched:
+			messages.success(request, "That Product Does Not Exist...Please try Again.")
+			return render(request, "search.html", {})
+		else:
+			return render(request, "search.html", {'searched':searched})
+	else:
+		return render(request, "search.html", {})
 
 
 class GroupViewSet(ModelViewSet):
@@ -39,6 +58,12 @@ class ProductViewSet(ModelViewSet):
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
   permission_classes = [AllowAny]
+  
+  def productView(request, pk):
+    product = get_object_or_404(Product, id=request.POST.get('product_id'))
+    product.likes.add(request.user)
+    return HttpResponseRedirect(reverse('product-detail', args=[str(pk)]))
+    
   
 class OrderViewSet(ModelViewSet):
   queryset = Order.objects.all()

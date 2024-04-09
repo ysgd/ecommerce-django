@@ -75,7 +75,21 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a></div>
+    <div class="text-center"><a class="mb-3 btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a>
+      <form action="{% url 'like_product' product.pk %}" method="POST">
+        {% csrf_token %}
+        <button
+          type="submit"
+          ,
+          name="product_id"
+          ,
+          value="{{ product.id }}"
+          ,
+          class="btn btn-primary btn-sm"
+        >
+          Like
+        </button>
+      </form></div>
                             </div>
                         </div>
                     </div>
