@@ -1,4 +1,4 @@
-{% load static %} {% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <!-- Header-->
 <header class="bg-dark py-5">
@@ -40,8 +40,8 @@
         <div
           class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"
         >
-          {% if searched %} {% for product in searched %} {% if
-          product.is_sale%}
+          {% if searched %} {% for product in searched %} {% if product.is_sale
+          %}
 
           <div class="col mb-5">
             <div class="card h-100">
@@ -56,14 +56,14 @@
               <!-- Product image-->
               <img
                 class="card-img-top"
-                src="{{ image.product.url }}"
+                src="{{ product.image.url }}"
                 alt="..."
               />
               <!-- Product details-->
               <div class="card-body p-4">
                 <div class="text-center">
                   <!-- Product name-->
-                  <h5 class="fw-bolder">{{ product.name }}</h5>
+                  <h5 class="fw-bolder">{{ product.productName }}</h5>
                   <!-- Sale -->
                   <div
                     class="d-flex justify-content-center small text-warning mb-2"
@@ -90,6 +90,7 @@
               </div>
             </div>
           </div>
+
           {% else %}
           <div class="col mb-5">
             <div class="card h-100">
@@ -103,7 +104,7 @@
               <div class="card-body p-4">
                 <div class="text-center">
                   <!-- Product name-->
-                  <h5 class="fw-bolder">{{ product.name }}</h5>
+                  <h5 class="fw-bolder">{{ product.productName }}</h5>
                   <!-- Product price-->
                   ${{ product.price }}
                 </div>

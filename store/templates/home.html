@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 
@@ -33,7 +34,7 @@
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ product.name }}</h5>
+                                    <h5 class="fw-bolder">{{ product.productName }}</h5>
                                     <!-- Sale -->
                 <div class="d-flex justify-content-center small text-warning mb-2">
                 <div class="bi-star-fill"></div>
@@ -68,28 +69,29 @@
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                    <h5 class="fw-bolder">{{ product.name }}</h5>
+                                    <h5 class="fw-bolder">{{ product.productName }}</h5>
                                     <!-- Product price-->
                                     ${{ product.price }}
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-    <div class="text-center"><a class="mb-3 btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a>
-      <form action="{% url 'like_product' product.pk %}" method="POST">
-        {% csrf_token %}
-        <button
-          type="submit"
-          ,
-          name="product_id"
-          ,
-          value="{{ product.id }}"
-          ,
-          class="btn btn-primary btn-sm"
-        >
-          Like
-        </button>
-      </form></div>
+    <div class="text-center mb-3"><a class="btn btn-outline-dark mt-auto mb-3" href="{% url 'product' product.id %}">View Product</a>
+    <form method="POST">
+      {% csrf_token %}
+      <button
+        type="submit"
+        ,
+        name="product_id"
+        ,
+        value="{{ product.id }}"
+        ,
+        class="btn btn-primary btn-sm"
+      >
+        Like
+      </button>
+    </form>
+  </div>
                             </div>
                         </div>
                     </div>

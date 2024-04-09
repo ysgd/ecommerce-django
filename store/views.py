@@ -9,26 +9,31 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAdminUser
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 
 # Create your views here.
 def home(request):
-	products = Product.objects.all()
-	return render(request, 'home.html', {'products':products})
+  products = Product.objects.annotate(num_likes=Count('likes')).order_by('-num_likes')
+  return render(request, 'home.html', {'products':products})
 
 def product(request,pk):
 	product = Product.objects.get(id=pk)
 	return render(request, 'product.html', {'product':product})
 
+def likeView(request, pk):
+  product = get_object_or_404(Product, id=request.POST.get('product_id'))
+  product.likes.add(request.user)
+  return HttpResponseRedirect(reverse('product', args=[str(pk)]))
+ 
 def search(request):
 	# Determine if they filled out the form
 	if request.method == "POST":
 		searched = request.POST['searched']
 		# Query The Products DB Model
-		searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+		searched = Product.objects.filter(Q(productName__icontains=searched) | Q(description__icontains=searched))
 		# Test for null
 		if not searched:
 			messages.success(request, "That Product Does Not Exist...Please try Again.")
@@ -58,11 +63,6 @@ class ProductViewSet(ModelViewSet):
   queryset = Product.objects.all()
   serializer_class = ProductSerializers
   permission_classes = [AllowAny]
-  
-  def productView(request, pk):
-    product = get_object_or_404(Product, id=request.POST.get('product_id'))
-    product.likes.add(request.user)
-    return HttpResponseRedirect(reverse('product-detail', args=[str(pk)]))
     
   
 class OrderViewSet(ModelViewSet):
