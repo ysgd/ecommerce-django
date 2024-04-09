@@ -11,9 +11,13 @@ from django.contrib.auth.models import Group
 from rest_framework.permissions import IsAdminUser
 
 # Create your views here.
-# def home(request):
-# 	products = Product.objects.all()
-# 	return render(request, 'home.html', {'products':products})
+def home(request):
+	products = Product.objects.all()
+	return render(request, 'home.html', {'products':products})
+
+def product(request,pk):
+	product = Product.objects.get(id=pk)
+	return render(request, 'product.html', {'product':product})
 
 
 class GroupViewSet(ModelViewSet):
